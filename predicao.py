@@ -53,7 +53,7 @@ def procuraCaracteres(imagem,threshN,nCaracteresDesejado):
 	#a funcao de threshold binariza a imagem somente deixando os pixels com 255 ou 0, o parametro threshN eh o valor de divisao para o pixel virar 0 ou 255
 	_,threshold = cv2.threshold(imagem,threshN,255,cv2.THRESH_BINARY)
 
-	_,contours,hierarchy= cv2.findContours(threshold,cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)	
+	contours,hierarchy= cv2.findContours(threshold,cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE) #quando no linux talvez precise adicionar mais um retorno para a funcao antes de contours
 	
 	posCaracteres=np.zeros((nCaracteresDesejado,4))
 	posCaracteresTemp=[]														#Variavel que ira conter os contornos localizados na triagem inicial
@@ -350,7 +350,7 @@ def leituraPlaca(imagem,certezaPredicao,modelo):
 
 #=========== EXEMPLO ===========
 
-'''
+#'''
 import datetime
 inicio = datetime.datetime.now()
 
@@ -364,7 +364,7 @@ for i in range(0,32):
 	imagem=cv2.imread("placas/placa0"+str(i)+".jpg")
 	certezaPredicao=7
 	
-	placa=leituraPlaca(imagem,certezaPredicao,"modeloKNN.sav")						
+	placa=leituraPlaca(imagem,certezaPredicao,"modelos/modeloKNNWindows.sav")
 
 
 
@@ -382,4 +382,4 @@ print('Tempo de Execução medio: '+str((fim-inicio)/32))
 print("Total de erros: "+ str(contaErro))
 
 
-'''
+#'''
