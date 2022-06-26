@@ -8,68 +8,80 @@ from sklearn.model_selection import train_test_split
 import sklearn.metrics
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import cross_val_score #novidade
+import argparse
+import sys
 
+def plotTesteParametrosKNN(caracteres,rotulos):
+  x_train, x_test, y_train, y_test = train_test_split(caracteres, rotulos,
+                                                      test_size=0.20, 
+                                                    random_state=42)
+  tr_acc = []
+  k_set = range(3,11)
 
-caracteres = np.loadtxt('caracteres.data',np.float32)
-rotulos = np.loadtxt('rotulos.data',np.float32)
-rotulos = rotulos.reshape((rotulos.size,1))
+  for n_neighbors in k_set:
+    knn = KNeighborsClassifier(n_neighbors=n_neighbors)
+    scores = cross_val_score(knn, x_train, y_train, cv=10)
+    tr_acc.append(scores.mean())
+    
+  best_k = np.argmax(tr_acc)
+  print("primeiro best"+str(k_set[best_k]))
 
-#Testes de valores KNN
+  te_acc = []
+  k_set = range(3,11)
 
+  for n_neighbors in k_set:
+    knn = KNeighborsClassifier(n_neighbors=n_neighbors)
+    knn.fit(x_train, y_train)
+    y_pred = knn.predict(x_test)
+    te_acc.append(sklearn.metrics.accuracy_score(y_test, y_pred)) 
 
-x_train, x_test, y_train, y_test = train_test_split(caracteres, rotulos,
-                                                    test_size=0.20, 
-                                                  random_state=42)
+  import matplotlib.pyplot as plt
 
-'''tr_acc = []
-k_set = range(3,11)
+  plt.plot(k_set,tr_acc, label='Treino')
+  plt.plot(k_set,te_acc, label='Teste')
+  plt.ylabel('Acurácia')
+  plt.xlabel('k')
+  plt.legend()
 
-for n_neighbors in k_set:
-  knn = KNeighborsClassifier(n_neighbors=n_neighbors)
-  scores = cross_val_score(knn, x_train, y_train, cv=10)
-  tr_acc.append(scores.mean())
-  
-best_k = np.argmax(tr_acc)
-print("primeiro best"+str(k_set[best_k]))
+  plt.show()
 
-te_acc = []
-k_set = range(3,11)
+def main():
 
-for n_neighbors in k_set:
-  knn = KNeighborsClassifier(n_neighbors=n_neighbors)
-  knn.fit(x_train, y_train)
-  y_pred = knn.predict(x_test)
-  te_acc.append(sklearn.metrics.accuracy_score(y_test, y_pred)) 
+  parser = argparse.ArgumentParser(description='args')
+  parser.add_argument('--algoritmo')			#tipod e algoritmo para criar o modelo
+  parser.add_argument('--testeKNN')			#tipod e algoritmo para criar o modelo
+  parser.add_argument('--bagging')			#tipod e algoritmo para criar o modelo
+  args = parser.parse_args()
+  algoritmo="knn"
+  if args.algoritmo != None:
+    algoritmo=str(args.algoritmo)
 
-import matplotlib.pyplot as plt
+  caracteres = np.loadtxt('caracteres.data',np.float32)
+  rotulos = np.loadtxt('rotulos.data',np.float32)
+  rotulos = rotulos.reshape((rotulos.size,1))
 
-plt.plot(k_set,tr_acc, label='Treino')
-plt.plot(k_set,te_acc, label='Teste')
-plt.ylabel('Acurácia')
-plt.xlabel('k')
-plt.legend()
+  if args.testeKNN != None:
+    plotTesteParametrosKNN(caracteres,rotulos)
 
-plt.show()'''
+  #=========== KNN
+  if algoritmo == "knn":
+    clf = KNeighborsClassifier(n_neighbors=5)
+    clf.fit(caracteres,rotulos.ravel()) 
 
-#=========== KNN
+  #=========== Arvore de decisao
+  if algoritmo == "tree":
+    clf = tree.DecisionTreeClassifier(criterion="gini")#
+    clf = clf.fit(samples, responses)
 
-clf = KNeighborsClassifier(n_neighbors=5)
-clf.fit(samples,responses) 
+  #=========== Bagging
+  if args.bagging != None:
+    from sklearn.ensemble import BaggingClassifier
+    clf = BaggingClassifier(DecisionTreeClassifier(criterion='entropy'))#
+    clf = clf.fit(samples, responses)
 
-#=========== Arvore de decisao
+  #========== Salvando modelo
+  filename = 'modeloKNN.sav'
+  pickle.dump(clf, open(filename, 'wb'))
 
-#clf = tree.DecisionTreeClassifier(criterion="gini")#
-#clf = clf.fit(samples, responses)
-
-#=========== Bagging
-
-from sklearn.ensemble import BaggingClassifier
-
-#clf = BaggingClassifier(DecisionTreeClassifier(criterion='entropy'))#
-
-#clf = clf.fit(samples, responses)
-
-#========== Salvando modelo
-
-filename = 'modeloKNN.sav'
-pickle.dump(clf, open(filename, 'wb'))
+if __name__ == '__main__':
+    sys.exit(main())
