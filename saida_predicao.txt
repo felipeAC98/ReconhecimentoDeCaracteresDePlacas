@@ -1,17 +1,13 @@
 Erro em: placas/placa00.jpg
-['H', 'G', 'Y', '2', '8', '8', '4']
+['H', 'W', 'Y', '2', '8', '8', '4']
 
 
 Erro em: placas/placa05.jpg
 ['H', 'C', 'I', '2', '6', '8', '4']
 
 
-Erro em: placas/placa017.jpg
-['R', 'V', 'I', '1', '3', '3', '4']
-
-
 Erro em: placas/placa018.jpg
-['R', 'V', 'I', '1', '3', '3', '4']
+['B', 'V', 'I', '1', '3', '3', '4']
 
 
 Erro em: placas/placa020.jpg
@@ -26,6 +22,6 @@ Erro em: placas/placa031.jpg
 []
 
 
-Tempo de Execução medio: 0:00:00.202533
+Tempo de Execução medio: 0:00:00.204836
 Total de placas: 32
-Total de erros: 7
+Total de erros: 6
