@@ -3,11 +3,12 @@ import numpy as np
 import cv2
 import os
 from os import listdir
+import separaCaracteres
 
 #===================== MAIN ==========================
 
 # definindo algumas variaveis para salvar os caracteres em um banco de caracteres rotulados
-nomePastaSaida="caracteres/"
+nomePastaSaida=separaCaracteres.caractesresPath
 def main():
 	placasDoTreino=0	
 	nErradas=0

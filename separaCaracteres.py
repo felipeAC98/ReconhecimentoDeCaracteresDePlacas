@@ -8,6 +8,7 @@ import sys
 import shutil
 
 linhaInfoCantosPlaca=6
+caractesresPath="caracteres/"
 
 def obtemImagens(nomeArquivo):
     # OBTENDO A PLACA E OS CARACTERES DELA DO ARQUIVO
@@ -66,7 +67,6 @@ def main():
 	else:
 		filePath=str(args.dataset)
 
-	caractesresPath="caracteres/"
 	pastas = [arq for arq in listdir(filePath)]
 	contador=[0]*37
 	maiorTamanho=0
