@@ -80,7 +80,7 @@ def main():
     clf = clf.fit(samples, responses)
 
   #========== Salvando modelo
-  filename = 'modeloKNN.sav'
+  filename = 'modelos/modeloKNN.sav'
   pickle.dump(clf, open(filename, 'wb'))
 
 if __name__ == '__main__':
