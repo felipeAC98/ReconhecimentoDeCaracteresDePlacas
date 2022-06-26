@@ -4,6 +4,8 @@ import os
 import numpy as np
 from os import listdir
 
+linhaInfoCantosPlaca=6
+
 def obtemImagens(nomeArquivo):
     # OBTENDO A PLACA E OS CARACTERES DELA DO ARQUIVO
 
@@ -13,10 +15,9 @@ def obtemImagens(nomeArquivo):
 	#indo para a posição da placa
 
 	placaLinha = fo.readlines()
-	placa = placaLinha[6]
+	placa = placaLinha[linhaInfoCantosPlaca]
 	
 	placa=placa[7:16]
-	print (placa)
 	mediaAltura=0
 	mediaLargura=0
 
@@ -25,7 +26,6 @@ def obtemImagens(nomeArquivo):
 		for i in range(7):
 
 			posicaoPlaca = placaLinha[8+i]
-			print(posicaoPlaca)
 			deslocador=0
 
 
@@ -41,7 +41,6 @@ def obtemImagens(nomeArquivo):
 				deslocador = deslocador + 1
 				y=int(posicaoPlaca[13+deslocador-1:17+deslocador])
 
-			print("deslocador: " +str(deslocador))
 
 			if posicaoPlaca[18 + deslocador] == ' ':
 				largura=int(posicaoPlaca[17+deslocador:18+deslocador])
@@ -57,7 +56,6 @@ def obtemImagens(nomeArquivo):
 			mediaAltura+=altura
 
 			mediaLargura+=largura
-		#print(posicoesCaracteres)
 
 	except: 	
 		mediaAltura=0
@@ -70,8 +68,9 @@ def obtemImagens(nomeArquivo):
 
 
 
+filePath="UFPR-ALPR/UFPR-ALPR dataset/validation/"
 
-pastas = [arq for arq in listdir("validation/")]
+pastas = [arq for arq in listdir(filePath)]
 
 contador=[0]*37
 
@@ -79,26 +78,23 @@ maiorTamanho=0
 
 for numeroPasta in pastas:
 
-	arquivos = [arq for arq in listdir("validation/"+numeroPasta+"/")]
+	arquivos = [arq for arq in listdir(filePath+numeroPasta+"/")]
 	jpgs = [arq for arq in arquivos if arq.lower().endswith(".png")]
 
 	for JPG in jpgs:
 
 
 		txt=JPG[:-3]+"txt"
-		print(txt)
-		placa,posicoesCaracteres,tamanho=obtemImagens("validation/"+numeroPasta+"/"+txt)
-
+		placa,posicoesCaracteres,tamanho=obtemImagens(filePath+numeroPasta+"/"+txt)
 		if tamanho>maiorTamanho:
 			placaM=placa
 			posicoesCaracteresM=posicoesCaracteres
 
 
-	print(posicoesCaracteresM[0][1])
 	letraAtual=0
 	for i in range(7):
 
-		imagem = cv2.imread("validation/"+numeroPasta+"/"+JPG)
+		imagem = cv2.imread(filePath+numeroPasta+"/"+JPG)
 
 
 		x=(int)(posicoesCaracteresM[i,0])
@@ -117,7 +113,6 @@ for numeroPasta in pastas:
 
 		else:						#entao eh letra
 			letraParaAsc=ord(placaM[letraAtual])-54
-			print(letraParaAsc)
 			contador[letraParaAsc]+=1
 			valor=contador[letraParaAsc]
 
@@ -126,49 +121,12 @@ for numeroPasta in pastas:
 			cv2.imwrite("caracteres/"+placaM[letraAtual]+"/"+str(valor+3200)+".jpg", caracter)
 
 		else:
-			#print("Criando diretorio: "+JPG[letraAtual])
+			if not os.path.isdir("caracteres/") :
+				os.mkdir("caracteres/")
 			os.mkdir("caracteres/"+placaM[letraAtual])
 			cv2.imwrite("caracteres/"+placaM[letraAtual]+"/"+str(valor+3200)+".jpg",caracter)
 
 		letraAtual+=1
 		if letraAtual==3:
 			letraAtual+=1
-'''
-		if largura*altura>tamanhoMaiorPlaca:
-			arquivoComMaiorPlaca=i
-			tamanhoMaiorPlaca=largura*altura
-
-		if arquivoComMaiorPlaca<10:
-		        nomeArquivo = "testing/track00"+str(imgNumber)+"/track00"+  str(imgNumber) + "[0"+ str(arquivoComMaiorPlaca) +"].txt"
-		        imageName = "testing/track00"+str(imgNumber) +"/track00"+  str(imgNumber) + "[0"+str(arquivoComMaiorPlaca) +"].png"
-		else:
-		        nomeArquivo = "testing/track00"+str(imgNumber)+"/track00"+  str(imgNumber) + "["+ str(arquivoComMaiorPlaca)+"].txt"
-		        imageName = "testing/track00"+str(imgNumber) +"/track00"+  str(imgNumber) + "["+ str(arquivoComMaiorPlaca)+"].png"	
-
-
-		x,y,largura,altura=obtemImagens(nomeArquivo)
-
-		print("Maior placa nos arquivos: "+str(arquivoComMaiorPlaca))
-		print(x)
-		print(y)
-		print(largura)
-		print(altura)
-		print(imageName)
-		#print (altura)
-
-		# Close opend file
-		
-
-		# OBTENDO A PLACA DA IMAGEM
-
-		image = cv2.imread(imageName)
-
-
-		#image[y:Y+tamanho , x:x+tamanho
-		cropped = image[y:(y+altura),x:(x+largura)]
-		cv2.imshow("cropped", cropped)
-		cv2.waitKey(0)
-
-		cv2.imwrite("imagensCortadas/track00"+str(imgNumber) + "[01].png", cropped)
-'''
 
