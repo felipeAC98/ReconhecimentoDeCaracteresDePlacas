@@ -10,9 +10,10 @@ import separaCaracteres
 import sys
 import shutil
 
+pastaSaida="dataAugmentation/"
+
 def main():
 	caracteres=separaCaracteres.caractesresPath
-	pastaSaida="dataAugmentation/"
 	if not os.path.isdir(pastaSaida):
 		os.mkdir(pastaSaida)
 

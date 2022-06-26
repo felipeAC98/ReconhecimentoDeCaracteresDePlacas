@@ -3,29 +3,29 @@ import numpy as np
 import cv2
 import os
 from os import listdir
-import separaCaracteres
+import dataAugmentation
 
 #===================== MAIN ==========================
 
 # definindo algumas variaveis para salvar os caracteres em um banco de caracteres rotulados
-nomePastaSaida=separaCaracteres.caractesresPath
+pastaCaracteres=dataAugmentation.pastaSaida
 def main():
 	placasDoTreino=0	
 	nErradas=0
 	respostas = []
 	caracteres = np.empty((0,84))
-	if not os.path.isdir(nomePastaSaida):
-		os.mkdir(nomePastaSaida)
+	if not os.path.isdir(pastaCaracteres):
+		os.mkdir(pastaCaracteres)
 
-	pastas = [arq for arq in listdir(nomePastaSaida)]
+	pastas = [arq for arq in listdir(pastaCaracteres)]
 
 	for pasta in pastas:
-		arquivos = [arq for arq in listdir(nomePastaSaida+pasta+"/")]
+		arquivos = [arq for arq in listdir(pastaCaracteres+pasta+"/")]
 		imagens = [arq for arq in arquivos if arq.lower().endswith(".jpg")]
 		print(pasta)
 
 		for imagemCaracter in imagens:
-			imagem=cv2.imread(nomePastaSaida+pasta+"/"+imagemCaracter)
+			imagem=cv2.imread(pastaCaracteres+pasta+"/"+imagemCaracter)
 			#Deixando somente em tons de cinza
 			gray = cv2.cvtColor(imagem,cv2.COLOR_BGR2GRAY)
 			#Equalizando a imagem
