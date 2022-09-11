@@ -1,5 +1,5 @@
-# Reconhecimento De Placas veiculares
-Código em python para efetuar a leitura de placas de carros brasileiros
+# Reconhecimento de caracteres de placas veiculares
+Código em python para efetuar a leitura de caracteres de placas de carros brasileiros
 
 
 ## Resumo da solução
